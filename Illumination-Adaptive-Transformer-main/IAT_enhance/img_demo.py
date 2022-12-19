@@ -1,5 +1,3 @@
-print(1)
-
 import os 
 import torch
 import cv2
@@ -11,20 +9,17 @@ from model.IAT_main import IAT
 from torchvision.transforms import Normalize
 import matplotlib.pyplot as plt
 
-print(1)
 parser = argparse.ArgumentParser()
 parser.add_argument('--file_name', type=str, default='demo_imgs/exposure_demo.JPG')
 parser.add_argument('--normalize', type=bool, default=False)
 parser.add_argument('--task', type=str, default='exposure', help='Choose from exposure or enhance')
 config = parser.parse_args()
-print(2)
 
 # Weights path
 exposure_pretrain = r'best_Epoch_exposure.pth'
 enhance_pretrain = r'best_Epoch_lol_v1.pth'
 
 normalize_process = Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
-print(3)
 
 ## Load Pre-train Weights
 model = IAT().cuda()
@@ -35,7 +30,6 @@ elif config.task == 'enhance':
 else:
     warnings.warn('Only could be exposure or enhance')
 model.eval()
-print(4)
 
 
 ## Load Image
