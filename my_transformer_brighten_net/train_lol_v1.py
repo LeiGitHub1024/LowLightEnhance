@@ -47,7 +47,7 @@ if not os.path.exists(config.snapshots_folder):
     os.makedirs(config.snapshots_folder)
 
 # Model Setting
-model = DenoiseAutoEncoder()
+model = DenoiseAutoEncoder().cuda()
 # if config.pretrain_dir is not None:
 #     model.load_state_dict(torch.load(config.pretrain_dir))
 
@@ -65,8 +65,8 @@ device = next(model.parameters()).device
 print('the device is:', device)
 
 # Loss & Optimizer Setting & Metric
-vgg_model = vgg16(pretrained=True).features[:16]
-vgg_model = vgg_model
+# vgg_model = vgg16(pretrained=True).features[:16]
+# vgg_model = vgg_model.cuda()
 
 for param in vgg_model.parameters():
     param.requires_grad = False
@@ -90,7 +90,7 @@ for epoch in range(config.num_epochs):
     print('the epoch is:', epoch)
     for iteration, imgs in enumerate(train_loader):
         print('the iteration is:', iteration)
-        low_img, high_img = imgs[0], imgs[1]
+        low_img, high_img = imgs[0].cuda(), imgs[1].cuda()
         # Checking!
         #visualization(low_img, 'show/low', iteration)
         #visualization(high_img, 'show/high', iteration)
