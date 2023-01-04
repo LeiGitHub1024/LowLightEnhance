@@ -17,6 +17,7 @@ from torchvision.models import vgg16
 
 from data_loaders.lol_v1 import lowlight_loader
 from model.autoEncoder import DenoiseAutoEncoder
+from model.autoEncoder import ModelV1
 # from model.IAT_main import IAT
 
 from IQA_pytorch import SSIM
@@ -47,7 +48,7 @@ if not os.path.exists(config.snapshots_folder):
     os.makedirs(config.snapshots_folder)
 
 # Model Setting
-model = DenoiseAutoEncoder().cuda()
+model = ModelV1().cuda()
 # if config.pretrain_dir is not None:
 #     model.load_state_dict(torch.load(config.pretrain_dir))
 
@@ -66,10 +67,10 @@ print('the device is:', device)
 
 # Loss & Optimizer Setting & Metric
 # vgg_model = vgg16(pretrained=True).features[:16]
-# vgg_model = vgg_model.cuda()
+# vgg_model = vgg_model
 
-for param in vgg_model.parameters():
-    param.requires_grad = False
+# for param in vgg_model.parameters():
+#     param.requires_grad = False
 
 L1_loss = nn.L1Loss()
 # L1_smooth_loss = F.smooth_l1_loss
@@ -89,7 +90,7 @@ for epoch in range(config.num_epochs):
     # adjust_learning_rate(optimizer, epoch)
     print('the epoch is:', epoch)
     for iteration, imgs in enumerate(train_loader):
-        print('the iteration is:', iteration)
+        # print('the iteration is:', iteration)
         low_img, high_img = imgs[0].cuda(), imgs[1].cuda()
         # Checking!
         #visualization(low_img, 'show/low', iteration)
@@ -114,11 +115,13 @@ for epoch in range(config.num_epochs):
     # PSNR_mean, SSIM_mean = validation(model, val_loader)
 
     # with open(config.snapshots_folder + '/log.txt', 'a+') as f:
-    #     f.write('epoch' + str(epoch) + ':' + 'the SSIM is' + str(SSIM_mean) + 'the PSNR is' + str(PSNR_mean) + '\n')
+        # f.write('epoch' + str(epoch) + ':' + 'the SSIM is' + str(SSIM_mean) + 'the PSNR is' + str(PSNR_mean) + '\n')
 
     # if SSIM_mean > ssim_high:
-    #     ssim_high = SSIM_mean
-    #     print('the highest SSIM value is:', str(ssim_high))
-    torch.save(model.state_dict(), os.path.join(config.snapshots_folder, "best_Epoch" + '.pth'))
+        # ssim_high = SSIM_mean
+        # print('the highest SSIM value is:', str(ssim_high))
+        # torch.save(model.state_dict(), os.path.join(config.snapshots_folder, "best_Epoch" + '.pth'))
 
-    f.close()
+    # f.close()
+    torch.save(model.state_dict(), os.path.join(config.snapshots_folder, "last_Epoch" + '.pth'))
+
